@@ -16,7 +16,7 @@ static void fillMap(int Height, std::ifstream& file, std::string& map)
 	}
 }
 
-static void fillTileMap(int Width, int area, const std::string&& map,std::vector<Tile>& tileMap, TextureManager& textureManager)
+static void fillTileMap(int Width, int area, const std::string& map,std::vector<Tile>& tileMap, std::vector<Tile::Type>& tileTypeMap, TextureManager& textureManager)
 {
 	for (int i = 0; i < area; i++)
 	{
@@ -24,12 +24,12 @@ static void fillTileMap(int Width, int area, const std::string&& map,std::vector
 		{
 			sf::Vector2f position = sf::Vector2f(64.f * (i % Width), 64.f * (i / Width));
 			tileMap.emplace_back(Tile(textureManager.getTexture("solidBlock"), position));
+			tileTypeMap.emplace_back(Tile::Type::Solid);
 		}
 		else if (map[i] == '.')
 		{
 			sf::Vector2f position = sf::Vector2f(64.f * (i % Width), 64.f * (i / Width));
-			tileMap.emplace_back(Tile(textureManager.getTexture("air"), position));
-			tileMap.back().type = Tile::Type::Air;
+			tileTypeMap.emplace_back(Tile::Type::Air);
 		}
 	}
 }
@@ -43,10 +43,14 @@ GameWorld::GameWorld(TextureManager& textureManager)
 void GameWorld::_World_Gen(TextureManager& textureManager)
 {
 	WorldMap.reserve(Map_Number);
+	TileTypeMap.reserve(Map_Number);
+
 	std::ifstream file;
 	for (int i = 0; i < Map_Number; i++)
 	{
 		WorldMap.emplace_back(COMP::Generation<Tile>{});
+		TileTypeMap.emplace_back(std::vector<Tile::Type>{});
+
 		file.open("map_" + std::to_string(i) + ".txt");
 		if (!file.is_open())
 		{
@@ -57,12 +61,13 @@ void GameWorld::_World_Gen(TextureManager& textureManager)
 
 		file >> WorldMap[i].Width;
 		file >> WorldMap[i].Height;
-
-		int area = WorldMap[i].Width * WorldMap[i].Height;
+		
+		size_t area = WorldMap[i].Width * WorldMap[i].Height;
 		
 		WorldMap[i].tileMap.reserve(area);
+		TileTypeMap.reserve(area);
 		
 		fillMap(WorldMap[i].Height, file, map);
-		fillTileMap(WorldMap[i].Width, area, std::move(map), WorldMap[i].tileMap, textureManager);
+		fillTileMap(WorldMap[i].Width, area, map, WorldMap[i].tileMap, TileTypeMap[i], textureManager);
 	}
 }

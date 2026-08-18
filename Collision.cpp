@@ -13,6 +13,11 @@ bool SYS::Collision::areIntersect(const COMP::Collision& shape_1, const COMP::Co
 	return true;
 }
 
+void SYS::Collision::setTilePosition(int Width, int i)
+{
+	tile.bounds.position = sf::Vector2f(64.f * (i % Width), 64.f * (i / Width));
+}
+
 void SYS::Collision::processHorizontalCollision(GameWorld& world)
 {
 	sf::Vector2f playerPosition = world.player.collision.bounds.position;
@@ -38,11 +43,13 @@ void SYS::Collision::processHorizontalCollision(GameWorld& world)
 		// Check From Top-Left To Bottom-Left Verticaly For Intersection And Corrects The Horizontal Position
 		for (int i = topLeft; i <= bottomLeft; i += world.WorldMap[world.CurrentMap].Width)
 		{
-			if (world.WorldMap[world.CurrentMap].tileMap[i].type == Tile::Type::Air) continue;
-			if (areIntersect(world.player.collision, world.WorldMap[world.CurrentMap].tileMap[i].collision))
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
+			
+			setTilePosition(world.WorldMap[world.CurrentMap].Width, i);
+			
+			if (areIntersect(world.player.collision, tile))
 			{
-				world.player.transform.position.x = world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.position.x
-					+ world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.size.x;
+				world.player.transform.position.x = tile.bounds.position.x + tile.bounds.size.x;
 				break;
 			}
 		}
@@ -55,11 +62,13 @@ void SYS::Collision::processHorizontalCollision(GameWorld& world)
 		// Check From Top-Right To Bottom-Right Verticaly For Intersection And Corrects The Horizontal Position
 		for (int i = topRight; i <= bottomRight; i += world.WorldMap[world.CurrentMap].Width)
 		{
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
 
-			if (world.WorldMap[world.CurrentMap].tileMap[i].type == Tile::Type::Air) continue;
-			if (areIntersect(world.player.collision, world.WorldMap[world.CurrentMap].tileMap[i].collision))
+			setTilePosition(world.WorldMap[world.CurrentMap].Width, i);
+
+			if (areIntersect(world.player.collision, tile))
 			{
-				world.player.transform.position.x = world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.position.x - playerSize.x;
+				world.player.transform.position.x = tile.bounds.position.x - playerSize.x;
 				break;
 			}
 
@@ -93,10 +102,13 @@ void SYS::Collision::processVerticalCollision(GameWorld& world)
 		// Check From Top-Left To Top-Right Horizontaly For Intersection And Corrects The Vertical Position
 		for (int i = topLeft; i <= topRight; i++)
 		{
-			if (world.WorldMap[world.CurrentMap].tileMap[i].type == Tile::Type::Air) continue;
-			if (areIntersect(world.player.collision, world.WorldMap[world.CurrentMap].tileMap[i].collision))
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
+			
+			setTilePosition(world.WorldMap[world.CurrentMap].Width, i);
+
+			if (areIntersect(world.player.collision, tile))
 			{
-				world.player.transform.position.y = world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.position.y + world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.size.y;
+				world.player.transform.position.y = tile.bounds.position.y + tile.bounds.size.y;
 				world.player.transform.velocity.y = 0.f;
 				break;
 			}
@@ -109,11 +121,14 @@ void SYS::Collision::processVerticalCollision(GameWorld& world)
 		world.player.collision.Grounded = { false };
 		for (int i = bottomLeft; i <= bottomRight; i++)
 		{
-			if (world.WorldMap[world.CurrentMap].tileMap[i].type == Tile::Type::Air) continue;
-			if (areIntersect(world.player.collision, world.WorldMap[world.CurrentMap].tileMap[i].collision))
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
+			
+			setTilePosition(world.WorldMap[world.CurrentMap].Width, i);
+
+			if (areIntersect(world.player.collision, tile))
 			{
 				world.player.collision.Grounded = { true };
-				world.player.transform.position.y = world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.position.y - playerSize.y;
+				world.player.transform.position.y = tile.bounds.position.y - playerSize.y;
 				world.player.transform.velocity.y = 0.f;
 				break;
 			}
@@ -124,7 +139,7 @@ void SYS::Collision::processVerticalCollision(GameWorld& world)
 
 		for (int i = bottomLeft; i <= bottomRight; i++)
 		{
-			if (world.WorldMap[world.CurrentMap].tileMap[i].type == Tile::Type::Air) continue;
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
 			world.player.collision.Grounded = { true };
 			world.player.input.canDash = { true };
 			return;

@@ -44,6 +44,7 @@ void Game::Render()
 
 void Game::run()
 {
+
 	while (window.isOpen())
 	{
 		update();

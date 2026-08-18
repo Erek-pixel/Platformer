@@ -83,11 +83,20 @@ namespace SYS
 
 		//	Checks And Corrects The Horizontal Collision 
 		static void processVerticalCollision(GameWorld&);
+
+	private:
+
+		//  In Space Rect to check The Collision
+		static inline COMP::Collision tile = COMP::Collision(sf::FloatRect({0.f, 0.f}, {64.f, 64.f}));
+
+		//  Calculate The tile position When Iterating
+		static void setTilePosition(int Width, int i);
 	};
 
 	class Render
 	{
 	public:
+
 		//	Renders The Whole Game
 		static void draw(GameWorld&, sf::RenderWindow&);
 	};

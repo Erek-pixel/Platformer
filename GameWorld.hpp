@@ -11,6 +11,6 @@ public:
 
 	int CurrentMap = { 0 };
 	Player player;
-	std::vector<std::vector<Tile::Type>> TileType;
+	std::vector<std::vector<Tile::Type>> TileTypeMap;
 	std::vector<COMP::Generation<Tile>> WorldMap;
 };

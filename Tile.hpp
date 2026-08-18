@@ -12,8 +12,7 @@ public:
 	// Tile Types
 	enum class Type
 	{
-		Grass,
-		Dirt,
+		Solid,
 		Air
 	};
 
@@ -21,7 +20,7 @@ public:
 
 	COMP::Sprite sprite;
 	COMP::Collision collision;
-	Type type = Type::Grass;
+	Type type = Type::Solid;
 
 	// CONSTRUCTOR TO LINK THE TEXTURE TO THE SPRITE
 	Tile(const sf::Texture& texture, sf::Vector2f position);
