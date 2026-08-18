@@ -1,6 +1,9 @@
 #include "System.hpp"
 #include <iostream>
 
+
+static constexpr float epsilon = 0.01f;
+
 bool SYS::Collision::areIntersect(const COMP::Collision& shape_1, const COMP::Collision& shape_2) noexcept
 {
 	if (shape_1.bounds.position.x >= shape_2.bounds.position.x + shape_2.bounds.size.x) return false;
@@ -56,7 +59,7 @@ void SYS::Collision::processHorizontalCollision(GameWorld& world)
 			if (world.WorldMap[world.CurrentMap].tileMap[i].type == Tile::Type::Air) continue;
 			if (areIntersect(world.player.collision, world.WorldMap[world.CurrentMap].tileMap[i].collision))
 			{
-				world.player.transform.position.x = world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.position.x - playerSize.x - 0.01f;
+				world.player.transform.position.x = world.WorldMap[world.CurrentMap].tileMap[i].collision.bounds.position.x - playerSize.x;
 				break;
 			}
 
@@ -78,7 +81,7 @@ void SYS::Collision::processVerticalCollision(GameWorld& world)
 	int topRight = world.WorldMap[world.CurrentMap].Width * (int)(playerPosition.y / 64.f) + (int)((playerPosition.x + playerSize.x) / 64.f);
 
 	// Get The Tile That Contains The Bottom-Right point
-	int bottomRight = world.WorldMap[world.CurrentMap].Width * (int)((playerPosition.y + playerSize.y) / 64.f) + (int)((playerPosition.x + playerSize.x) / 64.f);
+	int bottomRight = world.WorldMap[world.CurrentMap].Width * (int)((playerPosition.y + playerSize.y) / 64.f) + (int)((playerPosition.x + playerSize.x - epsilon) / 64.f);
 
 	switch (world.player.movmentState)
 	{
