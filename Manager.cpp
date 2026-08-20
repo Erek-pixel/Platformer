@@ -4,10 +4,10 @@
 
 TextureManager::TextureManager()
 {
-	const unsigned int Length = 3;
+	const unsigned int Length = 5;
 	
 	std::array<std::string, Length> textureNames =
-	{ "playerAnimatedSheet", "solidBlock", "air"};
+	{ "playerAnimatedSheet", "solidBlock", "transitionBlock", "air", "Platform"};
 
 	for (unsigned int i = 0; i < Length; i++)
 	{

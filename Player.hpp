@@ -39,9 +39,10 @@ public:
 	Timer dashCoolDown;
 	Timer wallJumpTimer;
 
-	const sf::Vector2f SCALED_ORIGIN = { 20.f, 100.f };
+	static constexpr sf::Vector2f SCALED_ORIGIN = { 20.f, 100.f };
+	static constexpr sf::Vector2f HITBOX_SIZE = { 40.f, 100.f };
+	static constexpr sf::Vector2f PLATFORM_HITBOX_SIZE = { 40.f, 10.f };
 private:
-	const sf::Vector2f HITBOX_SIZE = { 40.f, 100.f };
-	const sf::Vector2f SPRITE_SIZE = { 60.f, 120.f };
-	const sf::Vector2f ORIGIN = { 7.f, 15.f };
+	static constexpr sf::Vector2f SPRITE_SIZE = { 60.f, 120.f };
+	static constexpr sf::Vector2f ORIGIN = { 7.f, 15.f };
 };

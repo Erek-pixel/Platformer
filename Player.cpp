@@ -5,7 +5,7 @@
 Player::Player(const sf::Texture& spriteSheet) :
 	sprite(spriteSheet)
 {
-	transform.position = { 400.f, 200.f };
+	transform.position = { 400.f, 1436.f };
 	collision.bounds = sf::FloatRect(transform.position, HITBOX_SIZE);
 	sprite.transform.scale = { SPRITE_SIZE.x / 14.f, SPRITE_SIZE.y / 15.f };
 

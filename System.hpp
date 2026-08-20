@@ -25,7 +25,7 @@ namespace SYS
 		// Updates The Animation Stages
 		static void update(AnimatedSprite2D&,const Player::State&, float dt);
 	private:
-		static inline int counter = { 15 };
+		static inline int counter = { 0 };
 		static inline Player::State previousState = Player::State::IdleRight;
 	};
 

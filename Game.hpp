@@ -11,12 +11,21 @@ public:
 	Game();
 	void run();
 private:
+	//  Game State
+	enum class State
+	{
+		Play,
+		Transition,
+	} gameState = State::Play;
+
+	//  Game's Logic Flow
 	void update();
 	void handleGravity();
 	void handleMovement();
 	void handleAnimation();
 	void Render();
 
+	//  Game's Components
 	sf::RenderWindow window;
 	TextureManager textureManager;
 	AudioManager audioManager;

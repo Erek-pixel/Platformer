@@ -174,6 +174,7 @@
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameResources.hpp" />
     <ClInclude Include="GameWorld.hpp" />
+    <ClInclude Include="HashBlock.hpp" />
     <ClInclude Include="Manager.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="resource.h" />

@@ -6,6 +6,7 @@
 #define TILE_H
 #endif
 ;
+
 class Tile
 {
 public:
@@ -13,14 +14,21 @@ public:
 	enum class Type
 	{
 		Solid,
+		Transition,
+		Platform,
+		Hollow,
 		Air
 	};
+
+	//  The Amount of Maps to Skip When The Player Enters a Transition Block
+
+	int TransitionValue = 0;
 
 	// COMPONENTS
 
 	COMP::Sprite sprite;
 	COMP::Collision collision;
-	Type type = Type::Solid;
+//	Type type = Type::Solid;
 
 	// CONSTRUCTOR TO LINK THE TEXTURE TO THE SPRITE
 	Tile(const sf::Texture& texture, sf::Vector2f position);

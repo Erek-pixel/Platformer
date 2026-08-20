@@ -1,9 +1,11 @@
 #include "Game.hpp"
 #include <fstream>
 #include <iostream>
+
 Game::Game()
 	: window(sf::VideoMode({ 1408 ,704 }), "Platformer", sf::Style::Close | sf::Style::Titlebar), world(textureManager)
 {
+	world._World_Gen(textureManager);
 }
 
 
@@ -49,12 +51,18 @@ void Game::run()
 	{
 		update();
 		SYS::Events::handle(window);
-		SYS::Input::update(world.player.input);
-		handleGravity();
-		handleMovement();
-		handleAnimation();
-		SYS::Camera::update(world.player, window, 
-			sf::Vector2f( world.WorldMap[world.CurrentMap].Width, world.WorldMap[world.CurrentMap].Height ));
-		Render();
+		switch (gameState)
+		{
+		case State::Play:
+			SYS::Input::update(world.player.input);
+			handleGravity();
+		case State::Transition:
+			handleMovement();
+			handleAnimation();
+			SYS::Camera::update(world.player, window,
+				sf::Vector2f(world.WorldMap[world.CurrentMap].Width, world.WorldMap[world.CurrentMap].Height));
+			Render();
+			break;
+		}
 	}
 }

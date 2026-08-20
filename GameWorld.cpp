@@ -1,4 +1,5 @@
 #include "GameWorld.hpp"
+#include "HashBlock.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -16,20 +17,28 @@ static void fillMap(int Height, std::ifstream& file, std::string& map)
 	}
 }
 
-static void fillTileMap(int Width, int area, const std::string& map,std::vector<Tile>& tileMap, std::vector<Tile::Type>& tileTypeMap, TextureManager& textureManager)
+static void fillTileMap(int Width, size_t area, const std::string& map,std::vector<Tile>& tileMap, std::vector<Tile::Type>& tileTypeMap, TextureManager& textureManager)
 {
 	for (int i = 0; i < area; i++)
 	{
-		if (map[i] == '#')
+		float TransitionValue = 1.f;
+		sf::Vector2f position = sf::Vector2f(64.f * (i % Width), 64.f * (i / Width));
+		switch (map[i])
 		{
-			sf::Vector2f position = sf::Vector2f(64.f * (i % Width), 64.f * (i / Width));
+		case GRASS_BLOCK:
 			tileMap.emplace_back(Tile(textureManager.getTexture("solidBlock"), position));
 			tileTypeMap.emplace_back(Tile::Type::Solid);
-		}
-		else if (map[i] == '.')
-		{
-			sf::Vector2f position = sf::Vector2f(64.f * (i % Width), 64.f * (i / Width));
+			break;
+		case TRANSITION_BLOCK:
+			tileTypeMap.emplace_back(Tile::Type::Transition);
+			break;
+		case PLATFORM:
+			tileMap.emplace_back(Tile(textureManager.getTexture("Platform"), position));
+			tileTypeMap.emplace_back(Tile::Type::Platform);
+			break;
+		case AIR_BLOCK:
 			tileTypeMap.emplace_back(Tile::Type::Air);
+			break;
 		}
 	}
 }
@@ -37,7 +46,6 @@ static void fillTileMap(int Width, int area, const std::string& map,std::vector<
 GameWorld::GameWorld(TextureManager& textureManager)
 	: player(textureManager.getTexture("playerAnimatedSheet"))
 {
-	_World_Gen(textureManager);
 }
 
 void GameWorld::_World_Gen(TextureManager& textureManager)
@@ -65,7 +73,7 @@ void GameWorld::_World_Gen(TextureManager& textureManager)
 		size_t area = WorldMap[i].Width * WorldMap[i].Height;
 		
 		WorldMap[i].tileMap.reserve(area);
-		TileTypeMap.reserve(area);
+		TileTypeMap[i].reserve(area);
 		
 		fillMap(WorldMap[i].Height, file, map);
 		fillTileMap(WorldMap[i].Width, area, map, WorldMap[i].tileMap, TileTypeMap[i], textureManager);

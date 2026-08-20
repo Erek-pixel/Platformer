@@ -4,7 +4,7 @@
 
 static constexpr float epsilon = 0.01f;
 
-bool SYS::Collision::areIntersect(const COMP::Collision& shape_1, const COMP::Collision& shape_2) noexcept
+[[nodiscard]] bool SYS::Collision::areIntersect(const COMP::Collision& shape_1, const COMP::Collision& shape_2) noexcept
 {
 	if (shape_1.bounds.position.x >= shape_2.bounds.position.x + shape_2.bounds.size.x) return false;
 	if (shape_1.bounds.position.x + shape_1.bounds.size.x <= shape_2.bounds.position.x) return false;
@@ -43,7 +43,8 @@ void SYS::Collision::processHorizontalCollision(GameWorld& world)
 		// Check From Top-Left To Bottom-Left Verticaly For Intersection And Corrects The Horizontal Position
 		for (int i = topLeft; i <= bottomLeft; i += world.WorldMap[world.CurrentMap].Width)
 		{
-			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air
+				|| world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Platform) continue;
 			
 			setTilePosition(world.WorldMap[world.CurrentMap].Width, i);
 			
@@ -62,7 +63,8 @@ void SYS::Collision::processHorizontalCollision(GameWorld& world)
 		// Check From Top-Right To Bottom-Right Verticaly For Intersection And Corrects The Horizontal Position
 		for (int i = topRight; i <= bottomRight; i += world.WorldMap[world.CurrentMap].Width)
 		{
-			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air
+				|| world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Platform) continue;
 
 			setTilePosition(world.WorldMap[world.CurrentMap].Width, i);
 
@@ -102,7 +104,8 @@ void SYS::Collision::processVerticalCollision(GameWorld& world)
 		// Check From Top-Left To Top-Right Horizontaly For Intersection And Corrects The Vertical Position
 		for (int i = topLeft; i <= topRight; i++)
 		{
-			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air) continue;
+			if (world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Air
+				|| world.TileTypeMap[world.CurrentMap][i] == Tile::Type::Platform) continue;
 			
 			setTilePosition(world.WorldMap[world.CurrentMap].Width, i);
 
